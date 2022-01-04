@@ -1,0 +1,54 @@
+<div>
+    <input type="text" placeholder="name" id="name"> <input type="text" placeholder="last_name" id="last_name"><input
+        type="text" placeholder="age" id="age"><input type="text" placeholder="education" id="education"><input
+        type="text" placeholder="height" id="height"><input type="text" placeholder="weight" id="weight"><input
+        type="text" placeholder="gender" id="gender">
+    <button id="addUser">Добавить пользователя</button>
+</div>
+<button id="but">Посмотреть все</button>
+<p id='out'></p>
+<script>
+    addUser.onclick = async () => {
+        let name = document.getElementById("name").value
+        let last_name = document.getElementById("last_name").value
+        let age = document.getElementById("age").value
+        let education = document.getElementById("education").value
+        let height = document.getElementById("height").value
+        let weight = document.getElementById("weight").value
+        let gender = document.getElementById("gender").value
+        console.log({ name, last_name, age, education, height, weight, gender })
+        const reqAfricans2 = await fetch(
+            '/addnewuser',
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify({ name, last_name, age, education, height, weight, gender })
+            });
+        const allAfricans = await reqAfricans2.text();
+        console.log(allAfricans)
+        alert(allAfricans)
+
+    }
+    but.onclick = async () => {
+        const reqAfricans2 = await fetch(
+            '/getall',
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify({ key: 'value' })
+            });
+        const allAfricans = await reqAfricans2.json();
+        console.log(allAfricans)
+        let accamulator = "";
+        for (let i = 0; i < allAfricans.length; i++) {
+            //string.innerHTML += i + 1 + ". " + allAfricans[i].name + '<br>';
+            accamulator += `${i + 1}. ${allAfricans[i].name}, ${allAfricans[i].last_name}, ${allAfricans[i].age}, ${allAfricans[i].education}, ${allAfricans[i].height}, ${allAfricans[i].weight}, ${allAfricans[i].gender}<br>`
+        }
+        let string = document.getElementById('out');
+        string.innerHTML = accamulator
+    }
+</script>
