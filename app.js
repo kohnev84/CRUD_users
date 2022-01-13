@@ -67,5 +67,50 @@ app.post('/addnewuser', (req, res, next) => {
 });
 
 
+app.post('/updateuser', (req, res, next) => {
+    console.log(req.body)
+    let update_content = req.body.update_content
+    let select_content = req.body.select_content
+    let update_name = req.body.update_name
+    let update_last_name = req.body.update_last_name
+    if (select_content === "age" || select_content === "height" || select_content === "weight") {
+        update_content = +req.body.update_content
+    }
+    pool.connect(function (err, client, done) {
+        if (err) {
+            console.log("Can not connect to the DB" + err);
+        }
+        client.query(`UPDATE users SET ${select_content} = '${update_content}'  WHERE name = '${update_name}' AND last_name = '${update_last_name}';`, function (err, result) {
+            done();
+            if (err) {
+                console.log(err);
+                res.status(400).send(err);
+            }
+            res.status(200).send(`пользователь обновлен`);
+        })
+    })
+});
+
+
+app.post('/delete_user', (req, res, next) => {
+    console.log(req.body, "check")
+    let delete_name = req.body.delete_name
+    let delete_last_name = req.body.delete_last_name
+    console.log({ delete_name, delete_last_name })
+    pool.connect(function (err, client, done) {
+        if (err) {
+            console.log("Can not connect to the DB" + err);
+        }
+        client.query(`DELETE FROM  users  WHERE name = '${delete_name}' AND last_name = '${delete_last_name}';`, function (err, result) {
+            done();
+            if (err) {
+                console.log(err);
+                res.status(400).send(err);
+            }
+            res.status(200).send(`пользователь удален`);
+        })
+    })
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log("Listening on " + port))
