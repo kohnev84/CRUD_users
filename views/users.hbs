@@ -1,0 +1,127 @@
+<style>
+    body {
+        background-image: url(./img/africa.jpg);
+    }
+</style>
+
+<div class="container">
+    <section>
+        <input type="text" placeholder="name" id="name"> <input type="text" placeholder="last_name"
+            id="last_name"><input type="text" placeholder="age" id="age"><input type="text" placeholder="education"
+            id="education"><input type="text" placeholder="height" id="height"><input type="text" placeholder="weight"
+            id="weight"><input type="text" placeholder="gender" id="gender">
+        <button id="addUser" class="custom-btn_4 btn-1">Добавить
+            пользователя</button>
+    </section>
+    <section>
+        <button id="but" class="custom-btn_3 btn-13">Посмотреть все</button>
+        <p id='out'></p>
+    </section>
+    <section>
+        <select name="" id="select_content">
+            <option value="name">имя</option>
+            <option value="last_name">фамилия</option>
+            <option value="age">возрост</option>
+            <option value="education">образование</option>
+            <option value="height">рост</option>
+            <option value="weight">вес</option>
+            <option value="gender">пол</option>
+        </select>
+
+        <input type="text" placeholder="update content" id="update_content">
+    </section>
+    <section>
+        <input type="text" id="update_name">
+        <input type="text" id="update_last_name">
+        <button id="but_update" class="custom-btn_2 btn-3">обновить
+            пользователя</button>
+    </section>
+    <section>
+        <input type="text" id="delete_name">
+        <input type="text" id="delete_last_name">
+        <button id="delete_user" class="custom-btn_1 btn-5">удалить</button>
+    </section>
+</div>
+
+<script>
+    addUser.onclick = async () => {
+        let name = document.getElementById("name").value
+        let last_name = document.getElementById("last_name").value
+        let age = document.getElementById("age").value
+        let education = document.getElementById("education").value
+        let height = document.getElementById("height").value
+        let weight = document.getElementById("weight").value
+        let gender = document.getElementById("gender").value
+        console.log({ name, last_name, age, education, height, weight, gender })
+        const reqAfricans2 = await fetch(
+            '/addnewuser',
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify({ name, last_name, age, education, height, weight, gender })
+            });
+        const allAfricans = await reqAfricans2.text();
+        console.log(allAfricans)
+        alert(allAfricans)
+
+    }
+    but.onclick = async () => {
+        const reqAfricans2 = await fetch(
+            '/getall',
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+            });
+        const allAfricans = await reqAfricans2.json();
+        console.log(allAfricans)
+        let accamulator = "";
+        for (let i = 0; i < allAfricans.length; i++) {
+            //string.innerHTML += i + 1 + ". " + allAfricans[i].name + '<br>';
+            accamulator += `${i + 1}. ${allAfricans[i].name}, ${allAfricans[i].last_name}, ${allAfricans[i].age}, ${allAfricans[i].education}, ${allAfricans[i].height}, ${allAfricans[i].weight}, ${allAfricans[i].gender}<br>`
+        }
+        let string = document.getElementById('out');
+        string.innerHTML = accamulator
+    }
+    but_update.onclick = async () => {
+        let update_content = document.getElementById("update_content").value;
+        let select_content = document.getElementById("select_content").value;
+        let update_name = document.getElementById("update_name").value.trim();
+        let update_last_name = document.getElementById("update_last_name").value.trim();
+
+
+        console.log(select_content)
+        const reqAfricans2 = await fetch(
+            '/updateuser',
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify({ update_content, select_content, update_name, update_last_name })
+            });
+        const allAfricans = await reqAfricans2.text();
+        alert(allAfricans)
+        document.getElementById("but").click()
+    }
+    delete_user.onclick = async () => {
+        let delete_name = document.getElementById("delete_name").value;
+        let delete_last_name = document.getElementById("delete_last_name").value;
+        const reqAfricans2 = await fetch(
+            '/delete_user',
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: JSON.stringify({ delete_name, delete_last_name })
+            });
+        const allAfricans = await reqAfricans2.text();
+        alert(allAfricans)
+        document.getElementById("but").click()
+    }
+
+</script>

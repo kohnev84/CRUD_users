@@ -17,8 +17,8 @@ app.get('/', function (req, res) {
     res.render('index', req.query);
 });
 
-app.get('/newyear', function (req, res) {
-    res.render('new_year', req.query);
+app.get('/users', function (req, res) {
+    res.render('users', req.query);
 });
 
 
